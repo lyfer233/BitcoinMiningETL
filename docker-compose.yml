@@ -92,7 +92,7 @@ x-airflow-common:
 
 services:
   mysql:
-    image: mysql:8.0-debian
+    image: mysql:8.0
     restart: always
     ports:
       - 3306:3306
