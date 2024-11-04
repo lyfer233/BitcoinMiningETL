@@ -1,0 +1,18 @@
+[project]
+name = "BitcoinMining"
+version = "0.1"
+description = ""
+authors = ["Stoner"]
+readme = "README.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
