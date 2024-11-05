@@ -6,26 +6,25 @@ class DataModel(ABC):
     SQL_INSERT: str
 
     @abstractmethod
-    def __eq__(self, other):
-        ...
+    def __eq__(self, other): ...
 
     @property
     @abstractmethod
-    def __name__(self):
-        ...
+    def __name__(self): ...
 
     @property
     @abstractmethod
-    def sql_args(self):
-        ...
+    def sql_args(self): ...
 
 
 @dataclass
 class Price(DataModel):
     server_ts: int
     USD: int
-    SQL_INSERT = "INSERT INTO price (USD, server_ts, spider_ts) VALUES (%s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
-    SQL_QUERY_AVG = "SELECT AVG(USD) AS USD FROM price WHERE server_ts BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
+    SQL_INSERT = "INSERT INTO price (USD, server_ts, spider_ts) " \
+                 "VALUES (%s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
+    SQL_QUERY_AVG = "SELECT AVG(USD) AS USD FROM price WHERE server_ts " \
+                    "BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
 
     def __eq__(self, other):
         return self.server_ts == other.server_ts and self.USD == other.USD
@@ -48,10 +47,14 @@ class Hashrate(DataModel):
     server_ts: int
     hashrate: str
     difficulty: str
-    SQL_INSERT = "INSERT INTO hashrate (hashrate, difficulty, server_ts, spider_ts) " \
-                 "VALUES (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
-    SQL_QUERY = "SELECT hashrate, difficulty FROM hashrate " \
-                "WHERE server_ts BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
+    SQL_INSERT = (
+        "INSERT INTO hashrate (hashrate, difficulty, server_ts, spider_ts) "
+        "VALUES (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
+    )
+    SQL_QUERY = (
+        "SELECT hashrate, difficulty FROM hashrate "
+        "WHERE server_ts BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
+    )
 
     @property
     def sql_args(self):
@@ -62,7 +65,10 @@ class Hashrate(DataModel):
         return "Hashrate"
 
     def __str__(self):
-        return f"hashrate: {self.hashrate}, difficulty: {self.difficulty}, server_ts: {self.server_ts}"
+        return f"hashrate: {self.hashrate}, " \
+               f"difficulty: {self.difficulty}, " \
+               f"server_ts: {self.server_ts}"
 
     def __eq__(self, other):
-        return self.hashrate == other.hashrate and self.difficulty == other.difficulty
+        return self.hashrate == other.hashrate and \
+            self.difficulty == other.difficulty
