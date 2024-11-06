@@ -6,15 +6,18 @@ class DataModel(ABC):
     SQL_INSERT: str
 
     @abstractmethod
-    def __eq__(self, other): ...
+    def __eq__(self, other):
+        ...
 
     @property
     @abstractmethod
-    def __name__(self): ...
+    def __name__(self):
+        ...
 
     @property
     @abstractmethod
-    def sql_args(self): ...
+    def sql_args(self):
+        ...
 
 
 @dataclass
@@ -47,14 +50,10 @@ class Hashrate(DataModel):
     server_ts: int
     hashrate: str
     difficulty: str
-    SQL_INSERT = (
-        "INSERT INTO hashrate (hashrate, difficulty, server_ts, spider_ts) "
-        "VALUES (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
-    )
-    SQL_QUERY = (
-        "SELECT hashrate, difficulty FROM hashrate "
-        "WHERE server_ts BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
-    )
+    SQL_INSERT = "INSERT INTO hashrate (hashrate, difficulty, server_ts, spider_ts) " \
+                 "VALUES (%s, %s, FROM_UNIXTIME(%s), FROM_UNIXTIME(%s))"
+    SQL_QUERY = "SELECT hashrate, difficulty FROM hashrate " \
+                "WHERE server_ts BETWEEN FROM_UNIXTIME(%s) and FROM_UNIXTIME(%s)"
 
     @property
     def sql_args(self):
@@ -70,5 +69,4 @@ class Hashrate(DataModel):
                f"server_ts: {self.server_ts}"
 
     def __eq__(self, other):
-        return self.hashrate == other.hashrate and \
-            self.difficulty == other.difficulty
+        return self.hashrate == other.hashrate and self.difficulty == other.difficulty
