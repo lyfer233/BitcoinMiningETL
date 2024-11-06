@@ -63,7 +63,9 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__WEBSERVER__SECRET_KEY: ${SECRET_KEY}
     AIRFLOW__CORE__ALLOWED_DESERIALIZATION_CLASSES: ${ALLOWED_DESERIALIZATION_CLASSES}
+    AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
     AIRFLOW__SMTP__SMTP_HOST: ${EMAIL_HOST}
+    AIRFLOW__SMTP__SMTP_STARTTLS: False
     AIRFLOW__SMTP__SMTP_SSL: True
     AIRFLOW__SMTP__SMTP_USER: ${EMAIL_USER}
     AIRFLOW__SMTP__SMTP_PASSWORD: ${EMAIL_PW}
@@ -81,7 +83,7 @@ x-airflow-common:
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - ./src/mining:/opt/airflow/dags
+    - ./src:/opt/airflow/dags
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
