@@ -1,20 +1,18 @@
-[project]
+[tool.poetry]
 name = "BitcoinMining"
 version = "0.1"
-description = ""
-authors = ["Stoner"]
+description = "A ETL system to process btc mining index"
+authors = ["Stoner <liyf994@nenu.com>"]
 readme = "README.md"
-dependencies = [
-    "airflow",
-    "airflow_providers_mysql",
-    "mysqlclient",
-    "pytest",
-    "pytest-mock",
-    "pytest-html"
-]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+apache-airflow = "2.10.3"
+apache-airflow-providers-mysql = "5.7.3"
+mysqlclient = "2.2.5"
+pytest = "7.1.2"
+pytest-mock = "3.14.0"
+pytest-html = "4.1.1"
 
 [tool.pytest.ini_options]
 addopts = [
