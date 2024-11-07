@@ -6,7 +6,7 @@ authors = ["Stoner <liyf994@nenu.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.10"
+python = ">=3.10,<3.11"
 apache-airflow = "2.10.3"
 apache-airflow-providers-mysql = "5.7.3"
 mysqlclient = "2.2.5"
