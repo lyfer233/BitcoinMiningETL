@@ -138,8 +138,10 @@ def bitcoin_mining_record():
             mysql_trans(transformed_data,
                         MySqlHook(mysql_conn_id="mysql_mining").get_conn())
         except Exception as e:
-            raise RuntimeError(f"Mysql data save failed. The detail error info is: "
-                            f"{e}\n{traceback.format_exc()}")
+            raise RuntimeError(
+                f"MySQL data save failed. The detail error info is: "
+                f"{e}\n{traceback.format_exc()}"
+            )
 
     @task(on_failure_callback=send_failure_email)
     def load(params: dict = None):
@@ -166,8 +168,10 @@ def bitcoin_mining_record():
                 load_mysql_add(data, mysql_hook)
 
             except Exception as e:
-                raise RuntimeError(f"Load data failed. The detail error info is:"
-                                    f" {e}\n{traceback.format_exc()}")
+                raise RuntimeError(
+                    f"Load data failed. The detail error info is:"
+                    f" {e}\n{traceback.format_exc()}"
+                )
 
             return {
                 "spider_ts": spider_ts,
