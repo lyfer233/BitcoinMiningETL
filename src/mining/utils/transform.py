@@ -1,4 +1,3 @@
-import traceback
 import logging
 
 from MySQLdb.connections import Connection
@@ -13,8 +12,8 @@ def api_trans(price_data, hash_rate_data):
     if price_data:
         transformed_data["spider_ts"] = price_data.get("spider_ts")
         transformed_data["price"] = Price(
-            USD = price_data["price_data"]["USD"],
-            server_ts = price_data["price_data"]["time"]
+            USD=price_data["price_data"]["USD"],
+            server_ts=price_data["price_data"]["time"]
         )
         logging.info(f"Price data added to transformed_data: {transformed_data}")
 
@@ -30,6 +29,7 @@ def api_trans(price_data, hash_rate_data):
         logging.info("transform task skipped aas no data was available.")
         return None
     return transformed_data
+
 
 def mysql_trans(model_data: dict, mysql_hook: Connection):
     """save data"""

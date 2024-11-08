@@ -1,12 +1,13 @@
 import logging
-import aiohttp 
+import aiohttp
 import asyncio
 
-async def fetch_data_from_api(url: str, timeout: int = 5):  
+
+async def fetch_data_from_api(url: str, timeout: int = 5):
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=timeout) as response:
-                response.raise_for_status()  # This will raise an HTTPError if the HTTP request returned an unsuccessful status code
+                response.raise_for_status()
                 data = await response.json()
                 return data
     except aiohttp.ClientConnectionError:

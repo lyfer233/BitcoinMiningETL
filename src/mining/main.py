@@ -10,19 +10,19 @@ from airflow.models import Variable
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 from airflow.utils.email import send_email
 from airflow.utils.trigger_rule import TriggerRule
-from mining.data_model import Price, Hashrate
 from mining.utils.extract import fetch_data_from_api
 from mining.utils.transform import api_trans, mysql_trans
 from mining.utils.load import load_mysql_query, load_mysql_add
 
 # DAG parameter
 DAG_SCHEDULE_INTERVAL = timedelta(seconds=10)
-FETCH_PRICE_INTERVAL = 60  
-FETCH_HASHRATE_INTERVAL = 30  
-LOAD_INTERVAL = 300  
+FETCH_PRICE_INTERVAL = 60
+FETCH_HASHRATE_INTERVAL = 30
+LOAD_INTERVAL = 300
 # URL
 PRICE_URL = "https://mempool.space/api/v1/prices"
 HASH_RATE_URL = "https://mempool.space/api/v1/mining/hashrate/24h"
+
 
 def send_failure_email(context):
     try:
@@ -56,8 +56,6 @@ def send_failure_email(context):
         logging.error(f"Failed to send failure email: {e}")
 
 
-
-
 @dag(
     dag_id="bitcoin_mining",
     schedule=DAG_SCHEDULE_INTERVAL,
@@ -71,7 +69,6 @@ def send_failure_email(context):
         "LoadInterval": LOAD_INTERVAL
     }
 )
-
 def bitcoin_mining_record():
     @task(
         multiple_outputs=True,
@@ -84,7 +81,7 @@ def bitcoin_mining_record():
         #### get price data from api
         """
         last_run_time = int(Variable.get("last_price_task_run", default_var="0"))
-        spider_ts = int(time.time())        
+        spider_ts = int(time.time())
         fetch_price_interval = params["FetchPriceInterval"]
 
         if (spider_ts - last_run_time) >= fetch_price_interval:
@@ -97,7 +94,6 @@ def bitcoin_mining_record():
                 "spider_ts": spider_ts,
                 "price_data": data,
             }
-            
         else:
             return None
 
@@ -142,10 +138,8 @@ def bitcoin_mining_record():
             mysql_trans(transformed_data,
                         MySqlHook(mysql_conn_id="mysql_mining").get_conn())
         except Exception as e:
-            raise RuntimeError(f"Mysql data save failed."
-                    f"The detail error info is:"
-                    f"{e}\n{traceback.format_exc()}") 
-        
+            raise RuntimeError(f"Mysql data save failed. The detail error info is: "
+                            f"{e}\n{traceback.format_exc()}")
 
     @task(on_failure_callback=send_failure_email)
     def load(params: dict = None):
@@ -172,8 +166,7 @@ def bitcoin_mining_record():
                 load_mysql_add(data, mysql_hook)
 
             except Exception as e:
-                raise RuntimeError(f"Load data failed."
-                                    f"The detail error info is:"
+                raise RuntimeError(f"Load data failed. The detail error info is:"
                                     f" {e}\n{traceback.format_exc()}")
 
             return {
