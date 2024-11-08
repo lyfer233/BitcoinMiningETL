@@ -1,4 +1,4 @@
-import traceback
+import logging
 
 from MySQLdb.connections import Connection
 from MySQLdb.cursors import Cursor
@@ -6,32 +6,35 @@ from MySQLdb.cursors import Cursor
 from mining.data_model import Price, Hashrate
 
 
-def api_trans(api_data: dict):
+def api_trans(price_data, hash_rate_data):
     """clean and convert to data model"""
-    try:
-        trans_data = {
-            "spider_ts": api_data["spider_ts"],
-            "price": Price(USD=api_data["price"]["USD"],
-                           server_ts=api_data["price"]["time"])
-            if api_data["price"] is not None else None,
+    transformed_data = {}
+    if price_data:
+        transformed_data["spider_ts"] = price_data.get("spider_ts")
+        transformed_data["price"] = Price(
+            USD=price_data["price_data"]["USD"],
+            server_ts=price_data["price_data"]["time"]
+        )
+        logging.info(f"Price data added to transformed_data: {transformed_data}")
 
-            "hashrate": Hashrate(
-                hashrate=str(api_data["hashrate"]["currentHashrate"]),
-                difficulty=str(api_data["hashrate"]["currentDifficulty"]),
-                server_ts=api_data["spider_ts"]
-            )
-            if api_data["hashrate"] is not None else None
-        }
-        return trans_data
-    except Exception as e:
-        raise RuntimeError(f"Api data transform failed."
-                           f"The detail error info is:"
-                           f" {e}\n{traceback.format_exc()}"
-                           )
+    elif hash_rate_data:
+        transformed_data["spider_ts"] = hash_rate_data.get("spider_ts")
+        transformed_data["hashrate"] = Hashrate(
+            hashrate=str(hash_rate_data["hash_rate_data"]["currentHashrate"]),
+            difficulty=str(hash_rate_data["hash_rate_data"]["currentDifficulty"]),
+            server_ts=hash_rate_data.get("spider_ts")
+        )
+        logging.info(f"hash rate data added to transformed_data: {transformed_data}")
+    else:
+        logging.info("transform task skipped aas no data was available.")
+        return None
+    return transformed_data
 
 
 def mysql_trans(model_data: dict, mysql_hook: Connection):
     """save data"""
+    if model_data is None:
+        return
     spider_ts = model_data["spider_ts"]
     items = [model_data.get("price", None), model_data.get("hashrate", None)]
 
