@@ -7,8 +7,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'airflow_user';
 USE mining;
 CREATE TABLE `hashrate`  (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `hashrate` varchar(255) NOT NULL,
-  `difficulty` varchar(255) NOT NULL,
+  `hashrate` bigint NOT NULL,
+  `difficulty` bigint NOT NULL,
   `server_ts` timestamp NOT NULL,
   `spider_ts` timestamp NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -25,8 +25,8 @@ CREATE TABLE `price`  (
 CREATE TABLE `avg_info` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `USD` int NOT NULL,
-  `hashrate` varchar(255) NOT NULL,
-  `difficulty` varchar(255) NOT NULL,
+  `hashrate` bigint NOT NULL,
+  `difficulty` bigint NOT NULL,
   `spider_ts` timestamp NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB;
